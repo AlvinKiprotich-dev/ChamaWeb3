@@ -1,6 +1,9 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.validators import RegexValidator
+import uuid
+from django.utils import timezone
+from datetime import timedelta
 
 class User(AbstractUser):
     """
@@ -53,3 +56,32 @@ class User(AbstractUser):
     def has_wallet(self):
         """Check if user has a wallet address"""
         return bool(self.wallet_address)
+
+
+class EmailVerificationToken(models.Model):
+    """
+    Email verification token model
+    """
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='verification_tokens')
+    token = models.UUIDField(default=uuid.uuid4, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+    is_used = models.BooleanField(default=False)
+    
+    class Meta:
+        db_table = 'email_verification_tokens'
+        verbose_name = 'Email Verification Token'
+        verbose_name_plural = 'Email Verification Tokens'
+    
+    def save(self, *args, **kwargs):
+        if not self.expires_at:
+            # Set expiration to 24 hours from now
+            self.expires_at = timezone.now() + timedelta(hours=24)
+        super().save(*args, **kwargs)
+    
+    def is_expired(self):
+        """Check if the token has expired"""
+        return timezone.now() > self.expires_at
+    
+    def __str__(self):
+        return f"Verification token for {self.user.email}"
