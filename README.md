@@ -1,27 +1,38 @@
-# Chama Web3 Backend
+# Chama Web3 Platform
 
-A Django backend for a Chama (rotating savings group) platform that bridges frontend applications with Avalanche blockchain smart contracts.
+A full-stack Chama (rotating savings group) platform with Django backend and React frontend, featuring email verification, JWT authentication, and Web3 integration capabilities.
 
-## Features
+## 🏗️ Architecture
 
-- **User Management**: Registration, authentication, profile management
-- **Chama Groups**: Create and manage rotating savings groups (merry-go-round type)
-- **Contributions**: Track member contributions to groups
-- **Blockchain Integration**: Web3 integration with Avalanche network
-- **Background Tasks**: Celery-powered payout scheduling and notifications
-- **RESTful API**: Django REST Framework powered API endpoints
+- **Backend**: Django REST Framework with JWT authentication
+- **Frontend**: React + TypeScript + Vite + TailwindCSS
+- **Database**: SQLite (development) / PostgreSQL (production)
+- **Authentication**: JWT tokens with email verification
+- **API**: RESTful API with React Query integration
 
-## Getting Started
+## ✨ Features
 
-### Prerequisites
+### Backend Features
+- **User Management**: Registration with email verification, JWT authentication
+- **Chama Groups**: Create and manage rotating savings groups
+- **Contributions**: Track member contributions and payments
+- **Email System**: Email verification and notifications
+- **Background Tasks**: Celery-powered payout scheduling
+- **Web3 Ready**: Avalanche blockchain integration framework
 
-- Python 3.8+
-- PostgreSQL (for production) or SQLite (for development)
-- Redis (for production Celery) or Django database (for development)
+### Frontend Features
+- **Modern React**: TypeScript, Vite, TailwindCSS, shadcn/ui
+- **Authentication Flow**: Login, register, email verification, password reset
+- **Protected Routes**: JWT-based route protection
+- **API Integration**: React Query for efficient data fetching
+- **Responsive Design**: Mobile-first responsive UI
+- **Real-time Updates**: Optimistic updates and error handling
 
-### Installation
+## 🚀 Quick Start
 
-1. **Clone and navigate to the project:**
+### Backend Setup
+
+1. **Navigate to project directory:**
    ```bash
    cd ChamaWeb3
    ```
@@ -38,21 +49,63 @@ A Django backend for a Chama (rotating savings group) platform that bridges fron
    pip install -r requirements.txt
    ```
 
-4. **Environment Variables:**
-   Create a `.env` file in the project root:
-   ```env
-   DEBUG=True
-   SECRET_KEY=your-secret-key-here
-   
-   # Database (for production)
-   DB_NAME=chama_db
-   DB_USER=chama_user
-   DB_PASSWORD=chama_password
-   DB_HOST=localhost
-   DB_PORT=5432
-   
-   # Avalanche Configuration
-   AVALANCHE_RPC_URL=https://api.avax-test.network/ext/bc/C/rpc
+4. **Set up database:**
+   ```bash
+   python manage.py makemigrations
+   python manage.py migrate
+   ```
+
+5. **Start Django server:**
+   ```bash
+   python manage.py runserver
+   ```
+
+### Frontend Setup
+
+1. **Navigate to frontend directory:**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server:**
+   ```bash
+   npm run dev
+   ```
+
+### Access the Application
+
+- **Frontend**: http://localhost:8081/
+- **Backend API**: http://127.0.0.1:8000/api/
+- **Django Admin**: http://127.0.0.1:8000/admin/
+
+## ⚙️ Configuration
+
+### Backend Environment Variables
+Create a `.env` file in the root directory:
+```env
+DEBUG=True
+SECRET_KEY=your-secret-key-here
+
+# Email Configuration (for development - prints to console)
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+
+# Frontend URL (for email verification links)
+FRONTEND_URL=http://localhost:8081
+
+# Database (SQLite for development)
+# DB_NAME=chama_db
+# DB_USER=chama_user  
+# DB_PASSWORD=chama_password
+# DB_HOST=localhost
+# DB_PORT=5432
+
+# Avalanche Configuration (for future Web3 features)
+AVALANCHE_RPC_URL=https://api.avax-test.network/ext/bc/C/rpc
    AVALANCHE_CHAIN_ID=43113
    CHAMA_CONTRACT_ADDRESS=your-contract-address
    ADMIN_PRIVATE_KEY=your-wallet-private-key
@@ -193,14 +246,51 @@ You can test the API endpoints using:
 - Postman or similar API testing tools
 - Frontend integration
 
-## Next Steps
+### Frontend Environment Variables
+Create a `.env` file in the `frontend/` directory:
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000/api
+VITE_APP_NAME=ChamaWeb3
+VITE_APP_VERSION=1.0.0
+```
 
-1. **Deploy Smart Contract**: Deploy your Chama smart contract to Avalanche
-2. **Frontend Integration**: Connect with React/Vue frontend
-3. **Production Deployment**: Set up PostgreSQL and Redis
-4. **Testing**: Add comprehensive test suite
-5. **Documentation**: API documentation with tools like Swagger/OpenAPI
+## 🧪 Testing the Application
 
-## Support
+### 1. User Registration Flow
+1. Navigate to http://localhost:8081/
+2. Click "Register" and fill out the form
+3. Check Django console for verification email output
+4. Copy verification link and paste in browser
+5. Verify email and login
 
-For issues and questions, refer to the Django and DRF documentation, or check the project logs in the `logs/` directory.
+### 2. Authentication Flow
+- **Before verification**: Login should be blocked
+- **After verification**: Login should work and redirect to dashboard
+- **Protected routes**: Dashboard requires authentication
+
+### 3. API Testing
+The backend provides these main endpoints:
+- `POST /api/auth/register/` - User registration
+- `POST /api/auth/login/` - User login
+- `GET /api/auth/verify-email/` - Email verification
+- `POST /api/auth/resend-verification/` - Resend verification email
+- `GET /api/auth/profile/` - User profile (authenticated)
+
+## 📁 Project Structure
+
+```
+ChamaWeb3/
+├── chama_backend/          # Django settings
+├── users/                  # User authentication app
+├── chama/                  # Chama groups app
+├── frontend/               # React frontend
+│   ├── src/
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Page components
+│   │   ├── hooks/          # React Query hooks
+│   │   ├── lib/            # API and utilities
+│   │   └── contexts/       # React contexts
+├── static/                 # Static files
+├── logs/                   # Application logs
+└── requirements.txt        # Python dependencies
+```
