@@ -57,11 +57,22 @@ coverage.xml
 .pytest_cache/
 .cache
 
-# Node modules (if you add frontend later)
+# Node modules and Frontend
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
+
+# Frontend build outputs
+frontend/dist/
+frontend/build/
+.vite/
+
+# Frontend dependencies
+frontend/.env
+frontend/.env.local
+frontend/.env.production
 
 # Distribution / packaging
 .Python
