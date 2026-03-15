@@ -1,4 +1,4 @@
-# Chama Web3 Platform
+# Chama Web3 Platform.
 
 A full-stack Chama (rotating savings group) platform with Django backend and React frontend, featuring email verification, JWT authentication, and Web3 integration capabilities.
 
